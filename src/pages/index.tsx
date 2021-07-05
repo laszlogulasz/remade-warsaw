@@ -25,7 +25,7 @@ const IndexPage = ({ data }) => {
 export const query = graphql`
   query Exmple {
     allAirtable(
-      filter: { table: { eq: "Furniture" }, data: { Name: { regex: "" } } }
+      filter: { table: { eq: "Furniture" } }
       sort: { fields: rowIndex }
     ) {
       edges {
