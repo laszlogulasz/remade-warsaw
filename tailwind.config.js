@@ -1,6 +1,10 @@
 module.exports = {
   theme: {
     purge: ['./src/**/*.{js,jsx,ts,tsx}'],
+    fontFamily: {
+      'sans': ['sofia-pro-soft'],
+      'fancy': ['bc-alphapipe']
+    },
     extend: {
       colors: {
         primaryLight: 'rgba(255, 234, 229, 1)',

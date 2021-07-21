@@ -3,7 +3,7 @@ import tw from 'twin.macro'
 import { theme } from '../../tailwind.config'
 
 const LogoLink = tw.a`p-0`
-const LogoSvg = tw.svg`w-16 p-0 sm:p-1 sm:w-20 `
+const LogoSvg = tw.svg`w-16 p-0 sm:py-1 sm:w-20 `
 
 const Logo: React.FC<{ invert?: boolean }> = ({ invert }) => {
   const color = invert

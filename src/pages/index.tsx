@@ -17,7 +17,7 @@ const IndexPage = ({ data }) => {
   )
 
   return (
-    <Layout>
+    <Layout title="Reamade Warsaw | SHOP">
       <CardsWrapper>{cards}</CardsWrapper>
     </Layout>
   )

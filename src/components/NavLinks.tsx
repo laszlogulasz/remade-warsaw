@@ -23,7 +23,7 @@ const NavLinks: React.FC<{ mobile?: boolean }> = ({ mobile }) => {
         item.current
           ? tw`text-secondaryDark`
           : tw`text-primaryDark hover:text-deepDark`,
-        tw`px-3 py-2 rounded-md text-sm sm:text-base font-medium`,
+        tw`px-3 py-2 rounded-md text-base sm:text-lg lg:text-xl font-normal`,
         mobile && tw`block`,
       ]}
       aria-current={item.current ? 'page' : undefined}

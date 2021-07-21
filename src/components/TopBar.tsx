@@ -25,7 +25,7 @@ text-center
 sm:items-stretch 
 sm:justify-between 
 `
-const NavLinksWrapper = tw.div`space-x-4 hidden sm:block sm:ml-6 self-center`
+const NavLinksWrapper = tw.div`space-x-4 hidden sm:block  self-center`
 const SocialWrapper = tw.div`
 absolute 
 inset-y-0 
