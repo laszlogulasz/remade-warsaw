@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/pages/404.tsx"],"names":[],"mappings":"6GAIA,UAFkB,kBAAM","file":"component---src-pages-404-tsx-dc98a18d512ba6603349.js","sourcesContent":["import React from 'react'\n\nconst ErrorPage = () => <>Not found</>\n\nexport default ErrorPage\n"],"sourceRoot":""}
