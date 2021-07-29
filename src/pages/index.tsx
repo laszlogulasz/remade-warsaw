@@ -38,6 +38,7 @@ export const query = graphql`
                 }
               }
             }
+            Slug
             Name
             Designer {
               data {

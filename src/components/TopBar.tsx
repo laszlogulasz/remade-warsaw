@@ -6,7 +6,7 @@ import { theme } from '../../tailwind.config'
 import Logo from './Logo'
 import NavLinks from './NavLinks'
 
-const NavBarWrapper = tw.div`max-w-7xl mx-auto px-2 sm:px-6 lg:px-8`
+const NavBarWrapper = tw.div`max-w-7xl mx-auto px-2 sm:px-6`
 const NavBarElements = tw.div`relative flex items-center justify-between h-16`
 const HamburgerWrapper = tw.div`absolute inset-y-0 left-0 flex items-center sm:hidden`
 const HamburgerButton = tw(Disclosure.Button)`
@@ -42,9 +42,6 @@ text-primaryDark
 hover:text-white 
 focus:outline-none 
 focus:ring-2 
-focus:ring-offset-2 
-focus:ring-offset-gray-800 
-focus:ring-white
 `
 const NavLinksWrapperMobile = tw(Disclosure.Panel)`sm:hidden`
 const TopBar = () => {

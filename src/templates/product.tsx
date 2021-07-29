@@ -1,7 +1,7 @@
 import { defaultComponents, FormiumForm } from '@formium/react'
 import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import SwiperCore, {
   Controller,
@@ -13,9 +13,11 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.min.css'
 import tw from 'twin.macro'
 import {
+  FooterWrapper,
   FormControl,
   Header,
   Radio,
+  SubmitButton,
   Textarea,
   TextInput,
 } from '../components/formElements'
@@ -23,33 +25,39 @@ import Layout from '../components/Layout'
 import formium from '../lib/formium'
 SwiperCore.use([Navigation, Pagination, Controller, Thumbs])
 
-const ProductWrapper = tw.main`my-4 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 gap-4 grid grid-cols-1 sm:grid-cols-6`
-const GalleryWrapper = tw.figure`max-w-full col-start-1 col-end-7 lg:(col-start-1 col-end-5)`
+const ProductWrapper = tw.main`my-4 max-w-7xl mx-auto px-2 sm:px-6 gap-4 grid grid-cols-1 sm:grid-cols-12`
+const GalleryWrapper = tw.figure`max-w-full col-start-1 col-end-13 lg:(col-start-1 col-end-9)`
 const Gallery = tw(
   Swiper,
 )`max-w-lg sm:max-w-screen-sm lg:max-w-full mb-1 shadow`
 const ThumbsGallery = tw(Swiper)`max-w-lg sm:max-w-screen-sm lg:max-w-full`
-const ProductlDetailsWrapper = tw.section`col-start-1 col-end-7 w-full max-w-screen-sm lg:(col-start-5 col-end-7 place-self-start) place-self-center`
+const ProductlDetailsWrapper = tw.section`col-start-1 col-end-13 w-full max-w-screen-sm lg:(col-start-9 col-end-13 place-self-start) place-self-center`
 const ProductTitle = tw.h2`mb-5 font-fancy text-4xl text-primaryDark uppercase`
-const ProductDescription = tw.div`text-primaryDark font-light w-full sm:(max-w-screen-sm place-self-center) col-start-1 col-end-7 lg:(text-lg col-start-1 col-end-5 place-self-start)`
-const ProductDetails = tw.div`col-start-1 col-end-7 w-full max-w-screen-sm lg:(col-start-1 col-end-5) grid justify-items-start`
+const ProductDescription = tw.div`
+  text-primaryDark 
+  font-light 
+  w-full 
+  sm:(max-w-screen-sm place-self-center) 
+  col-start-1 col-end-13 
+  lg:(text-lg col-start-1 col-end-8 place-self-start)
+`
 const ProductDetailsHeader = tw.h3`mb-3 font-fancy text-xl text-primaryDark uppercase`
 const ProductDetailsList = tw.ul``
-const ProductFormWrapper = tw.section`col-start-1 col-end-7 lg:(col-start-5 col-end-7 place-self-start w-full) max-w-screen-sm place-self-center`
+const ProductFormWrapper = tw.section`col-start-1 col-end-13 w-full lg:(col-start-8 col-end-13 place-self-start)  max-w-screen-sm place-self-center`
 const ProductDetail = tw.li`text-primaryDark lg:text-lg font-light`
 const SpanBold = tw.span`pl-1 font-normal`
 
-const myComponents = {
-  ...defaultComponents,
-  TextInput,
-  FormControl,
-  Header,
-  Textarea,
-  Radio,
-}
-
 const Product = ({ data }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState(false)
+
+  let containerRef = useRef(null)
+
+  useEffect(() => {
+    containerRef.current.firstChild.setAttribute('novalidate', true)
+  }, [])
+
   const images = data.airtable.data.Images.localFiles.map(
     (image: any, i: number) => {
       const img = getImage(image)
@@ -60,11 +68,7 @@ const Product = ({ data }) => {
       )
     },
   )
-  const formiumFormData = data.formiumForm
-  console.log(
-    '🚀 ~ file: product.tsx ~ line 64 ~ Product ~ formiumFormData',
-    formiumFormData,
-  )
+
   const thumbs = data.airtable.data.Images.localFiles.map(
     (image: any, i: number) => {
       const img = getImage(image)
@@ -103,7 +107,7 @@ const Product = ({ data }) => {
         <ProductlDetailsWrapper>
           <ProductTitle>{data.airtable.data.Name}</ProductTitle>
 
-          <ProductDetailsHeader>Product details</ProductDetailsHeader>
+          <ProductDetailsHeader>Product details </ProductDetailsHeader>
           <ProductDetailsList>
             <ProductDetail>
               Dimentions (WxLxH):
@@ -111,7 +115,11 @@ const Product = ({ data }) => {
             </ProductDetail>
             <ProductDetail>
               Designer:
-              <SpanBold>{data.airtable.data.Designer[0].data.Name}</SpanBold>
+              <SpanBold>
+                {data.airtable.data.Designer
+                  ? data.airtable.data.Designer[0].data.Name
+                  : `-`}
+              </SpanBold>
             </ProductDetail>
             <ProductDetail>
               Producer:
@@ -126,17 +134,38 @@ const Product = ({ data }) => {
         <ProductDescription>
           <ReactMarkdown>{data.airtable.data.Description}</ReactMarkdown>
         </ProductDescription>
-
-        <ProductFormWrapper>
+        <ProductFormWrapper ref={containerRef}>
           <FormiumForm
-            data={formiumFormData}
-            components={myComponents}
+            data={data.formiumForm}
+            components={{
+              ...defaultComponents,
+              TextInput,
+              FormControl,
+              Header,
+              Textarea,
+              Radio,
+              SubmitButton,
+              FooterWrapper: (props: any) => (
+                <FooterWrapper
+                  {...props}
+                  submitSuccess={submitSuccess}
+                  submitError={submitError}
+                />
+              ),
+            }}
             onSubmit={async values => {
-              await formium.submitForm('buy-a-product', {
-                ...values,
-                title: data.airtable.data.Name,
-              })
-              alert('Success')
+              try {
+                await formium.submitForm('buy-a-product', {
+                  ...values,
+                  title: data.airtable.data.Name,
+                })
+                containerRef.current.firstChild.reset()
+                setSubmitSuccess(true)
+                setTimeout(() => setSubmitSuccess(false), 5000)
+              } catch (error) {
+                setSubmitError(true)
+                setTimeout(() => setSubmitError(false), 5000)
+              }
             }}
           />
         </ProductFormWrapper>

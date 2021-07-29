@@ -4,6 +4,7 @@ dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 module.exports = {
+  pathPrefix: "/remade",
   plugins: [
     {
       resolve: `gatsby-source-filesystem`,
